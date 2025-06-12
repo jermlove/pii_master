@@ -20,4 +20,21 @@ def load_input_file(path):
         raise ValueError("Unsupported file type. Please provide a CSV, Excel, JSON, or log file.")
 
 def save_output_file(df, output_path):
-    df.to_excel(output_path, index=False)
+    import os
+    import json
+
+    _, ext = os.path.splitext(output_path)
+    ext = ext.lower()
+
+    if ext in [".xlsx", ".xls"]:
+        df.to_excel(output_path, index=False)
+    elif ext == ".csv":
+        df.to_csv(output_path, index=False)
+    elif ext == ".json":
+        df.to_json(output_path, orient="records", indent=2)
+    elif ext == ".log":
+        with open(output_path, "w", encoding="utf-8") as f:
+            for record in df.to_dict(orient="records"):
+                f.write(json.dumps(record) + "\n")
+    else:
+        raise ValueError("Unsupported output format.")

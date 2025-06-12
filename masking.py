@@ -5,7 +5,8 @@ def generate_unique_mapping(series, base_label, suffix_format="{base}{num}"):
     mapping = {orig: suffix_format.format(base=base_label, num=i + 1) for i, orig in enumerate(unique_values)}
     return series.map(mapping)
 
-def mask_pii_data(df):
+def mask_pii_data(df, client_name="Pace Lab"):
+
     unique_fields = {
         'First Name': 'John',
         'Last Name': 'Doe',
@@ -38,7 +39,7 @@ def mask_pii_data(df):
         if col in df.columns:
             df[col] = val
 
-    if 'Client' in df.columns:
-        df['Client'] = "Pace Lab"
+    if "Client" in df.columns:
+        df["Client"] = client_name
 
     return df

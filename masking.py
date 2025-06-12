@@ -19,11 +19,8 @@ def mask_pii_data(df, client_name="Pace Lab"):
     static_fields = {
         'Phone': '000-000-0000',
         'Address': '123 Main St',
-        'City': 'Anytown',
-        'State': 'ST',
-        'Zip': '00000',
-        'Country': 'CountryX',
-        'Region': 'RegionX'
+        'City': 'Anytown',        
+        'Zip': '00000',        
     }
 
     for col, base in unique_fields.items():

@@ -5,6 +5,17 @@ def generate_unique_mapping(series, base_label, suffix_format="{base}{num}"):
     mapping = {orig: suffix_format.format(base=base_label, num=i + 1) for i, orig in enumerate(unique_values)}
     return series.map(mapping)
 
+domain_map = {}
+
+def mask_email(row):
+    name = row.get("Full Name", "user").replace(" ", "").lower()
+    org = row.get("Reader Org", "")
+    if org not in domain_map:
+        domain_map[org] = f"example{len(domain_map)+1}.com"
+    domain = domain_map[org]
+    return f"{name}@{domain}" if name else f"user@{domain}"
+
+
 def mask_pii_data(df, client_name="Pace Lab"):
 
     unique_fields = {
@@ -30,7 +41,7 @@ def mask_pii_data(df, client_name="Pace Lab"):
     if 'Email' in df.columns:
         unique_emails = df['Email'].dropna().unique()
         email_mapping = {orig: f"user{i+1}@example.com" for i, orig in enumerate(unique_emails)}
-        df['Email'] = df['Email'].map(email_mapping)
+        df['Email'] = df.apply(mask_email, axis=1)
 
     for col, val in static_fields.items():
         if col in df.columns:
